@@ -1,0 +1,18 @@
+{
+    "Tick": {
+        "link": "https://links.sgx.com/1.0.0/derivatives-historical/{}/WEBPXTICK_DT.zip",
+        "column": "Data File"
+    },
+    "Tick Data Structure": {
+        "link": "https://links.sgx.com/1.0.0/derivatives-historical/{}/TickData_structure.dat",
+        "column": "Tick Data Structure File"
+    },
+    "Trade Cancellation": {
+        "link": "https://links.sgx.com/1.0.0/derivatives-historical/{}/TC.txt",
+        "column": "TC Data File"
+    },
+    "Trade Cancellation Data Structure": {
+        "link": "https://links.sgx.com/1.0.0/derivatives-historical/{}/TC_structure.dat",
+        "column": "TC Data Structure File"
+    }
+}

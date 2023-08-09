@@ -1,0 +1,21 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+version: '2'
+services:
+  clickhouse:
+    image: docker.io/bitnami/clickhouse:23
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '8123:8123'
+    volumes:
+      - clickhouse_data:/bitnami/clickhouse
+  hadoop:
+    image: docker.io/harisekhon/hadoop:latest
+    container_name: hdfs_docker
+    volumes: 
+      - .:/data/
+volumes:
+  clickhouse_data:
+    driver: local
