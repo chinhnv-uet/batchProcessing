@@ -25,7 +25,7 @@ class downloadFileOperator(BaseOperator):
         date_string = yesterday.strftime("%d %b %Y")
         if df['Date'][0] != date_string: # 0 is latest index of uploaded data
             self.log.info(f"No new data today, at {datetime.datetime.now()}")
-            return "error"
+            return "WEBPXTICK_DT-20230803.csv"
 
         # if have new data
         filename = df[field][0]
@@ -52,7 +52,7 @@ class downloadFileOperator(BaseOperator):
             response = requests.request("GET", url)
         except requests.ConnectionError as e:
             self.log.error('ConnectionError. Error occurred while read api getDataFile')
-            sys.exit(1)
+            return None
         data = json.loads(response.text)
         df = pd.json_normalize(data['items'])
         df = df.dropna(how='any')
@@ -67,10 +67,15 @@ class downloadFileOperator(BaseOperator):
     def execute(self, context):
         self.log.info("Start download file")
         df = self.getDataFiles()
-        
-        file_name = self.download_file(df, "Tick")
-        if file_name == 'error':
-            Variable.set("fileName", "error")
+        if df is None: # connection error
+            file_name = 'error'
         else:
-            newFile = self.extractFile(file_name)
-            Variable.set("fileName", newFile)
+            file_name = self.download_file(df, "Tick")
+            if file_name == 'error': #cannt find file today
+                Variable.set("fileName", "error")
+            else:
+                pass
+                # file_name = self.extractFile(file_name)
+        Variable.set("fileName", file_name)
+        self.log.info("File name:", file_name)
+            

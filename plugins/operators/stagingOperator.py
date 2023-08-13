@@ -12,7 +12,7 @@ class stagingOperator(BaseOperator):
     def execute(self, context):
         fileName = Variable.get("fileName")
         if fileName == 'error':
-            self.log.info("No new file to staging")
+            self.log.info("No new file for staging")
             return
         
         self.log.info("Start staging file")
