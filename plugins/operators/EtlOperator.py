@@ -81,11 +81,14 @@ class EtlOperator(BaseOperator):
     def updateCommodity(self, df, uri, spark):
         newComm = df.select('Comm').drop_duplicates().withColumnRenamed("Comm", "CommodityCode")
         oldComm = spark.read.format("jdbc").options(**{'url': uri,'dbtable' : 'Dim_Commodity','isolationLevel' : 'NONE'}).load()
-        oldComm = comm.select("CommodityCode")
+        oldComm = oldComm.select("CommodityCode")
         
         comm_combined = oldComm.union(newComm).dropDuplicates()
         newRecord = comm_combined.subtract(oldComm)
-        newData = [(comm.count() + i, newRecord.collect()[i]['CommodityCode']) for i in range(newRecord.count())]
+        if newRecord.count() == 0:
+            self.log.info("No new data for update commodity")
+            return
+        newData = [(oldComm.count() + i, newRecord.collect()[i]['CommodityCode']) for i in range(newRecord.count())]
         newDataDf = spark.createDataFrame(data=newData, schema=["Commodity_Key", 'CommodityCode'])
         newDataDf.write.mode("append").format("jdbc").options(**{'url': uri, 'dbtable' : 'Dim_Commodity', 'isolationLevel' : 'NONE'}).save()
         self.log.info("Update dim commodity successfully")
@@ -137,15 +140,15 @@ class EtlOperator(BaseOperator):
         df = spark.read.csv(f"hdfs://localhost:8020/sgx_data/{fileName}", header=True, inferSchema=True)
         self.log.info(f"Done read file {fileName}, with {df.count()} record")
         
-        # uri = "jdbc:clickhouse://{}:{}/{}".format("localhost", 8123, "SgxTrading")
-        # dimAction = spark.read.format("jdbc").options(**{'url': uri,'dbtable' : 'Dim_Action','isolationLevel' : 'NONE'}).load()
+        uri = "jdbc:clickhouse://{}:{}/{}".format("localhost", 8123, "SgxTrading")
+        dimAction = spark.read.format("jdbc").options(**{'url': uri,'dbtable' : 'Dim_Action','isolationLevel' : 'NONE'}).load()
         
-        # if dimAction.count() == 0:
-            # self.log.info("Start load default dimension table")
-            # self.insertDefaultDim(df, uri, spark)
-            
-        # self.log.info("Start update commodity")
-        # self.updateCommodity(df, uri, spark)
+        if dimAction.count() == 0:
+            self.log.info("Start load default dimension table")
+            self.insertDefaultDim(df, uri, spark)
+        else:
+            self.log.info("Start update commodity")
+            self.updateCommodity(df, uri, spark)
         
-        # self.log.info("Start insert fact table")
-        # self.insertFact(df, uri, spark)
+        self.log.info("Start insert fact table")
+        self.insertFact(df, uri, spark)

@@ -25,7 +25,7 @@ class downloadFileOperator(BaseOperator):
         date_string = yesterday.strftime("%d %b %Y")
         if df['Date'][0] != date_string: # 0 is latest index of uploaded data
             self.log.info(f"No new data today, at {datetime.datetime.now()}")
-            return "WEBPXTICK_DT-20230803.csv"
+            return "error"
 
         # if have new data
         filename = df[field][0]
@@ -71,11 +71,8 @@ class downloadFileOperator(BaseOperator):
             file_name = 'error'
         else:
             file_name = self.download_file(df, "Tick")
-            if file_name == 'error': #cannt find file today
-                Variable.set("fileName", "error")
-            else:
-                pass
-                # file_name = self.extractFile(file_name)
+            if file_name != 'error': #find file today
+                file_name = self.extractFile(file_name)
         Variable.set("fileName", file_name)
         self.log.info("File name:", file_name)
             

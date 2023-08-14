@@ -19,8 +19,8 @@ class stagingOperator(BaseOperator):
         
         #mkdir hdfs
         hdfs_path = '/sgx_data/'
-        command = f'hdfs dfs -mkdir {hdfs_path}'
-        subprocess.run(command, shell=True)
+        # command = f'hdfs dfs -mkdir {hdfs_path}'
+        # subprocess.run(command, shell=True)
         
         source_path = fileName
         putCommand = f'hdfs dfs -put {source_path} {hdfs_path}'

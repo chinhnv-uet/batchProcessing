@@ -1,4 +1,2 @@
-logs/
-.env
-config/
-startService.sh
+# logs/
+__pycache__

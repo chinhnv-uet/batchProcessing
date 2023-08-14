@@ -7,15 +7,6 @@ from operators.downloadFileOperator import downloadFileOperator
 from operators.stagingOperator import stagingOperator
 from operators.EtlOperator import EtlOperator
 
-# class file:
-#     def __init__(self, fileName):
-#         self.fileName = fileName
-        
-#     def setName(self, fileName):
-#         self.fileName = fileName
-        
-#     def getName(self):
-#         return self.fileName
     
 with DAG(
     dag_id="etlTradingData",
@@ -26,7 +17,7 @@ with DAG(
 ):
     # downloadFileOperator(task_id="ok")
     stage1 = downloadFileOperator(task_id="downloadFile")
-    # stage2 = stagingOperator(task_id="staging")
+    stage2 = stagingOperator(task_id="staging")
     stage3 = EtlOperator(task_id="Etl")
     
-    stage1 >> stage3
+    stage1 >> stage2 >> stage3
