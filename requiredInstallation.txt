@@ -1,0 +1,5 @@
+- hdfs: run in localhost, port: 8020
+- clickhouse: run in localhost, port default: 8123
+- airflow
+- remember to connect airfow to dags folder and plugins folder
+- remember to download clickhouse-jdbc (https://mvnrepository.com/artifact/com.clickhouse/clickhouse-jdbc) file and add to jars folder of python (or spark)

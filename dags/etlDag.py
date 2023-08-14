@@ -10,10 +10,10 @@ from operators.EtlOperator import EtlOperator
     
 with DAG(
     dag_id="etlTradingData",
-    start_date=datetime(2023, 8, 12, 8, 0, 0),
+    start_date=datetime(2023, 8, 15, 11, 0, 0),
     catchup=False,
     tags=['etl', 'v1'],
-    schedule_interval=timedelta(days=2000)
+    schedule_interval=timedelta(days=1)
 ):
     # downloadFileOperator(task_id="ok")
     stage1 = downloadFileOperator(task_id="downloadFile")
