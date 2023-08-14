@@ -9,15 +9,15 @@ from operators.EtlOperator import EtlOperator
 
     
 with DAG(
-    dag_id="etlTradingData",
-    start_date=datetime(2023, 8, 15, 11, 0, 0),
+    dag_id="TradingData",
+    start_date=datetime(2023, 8, 13, 11, 0, 0),
     catchup=False,
-    tags=['etl', 'v1'],
+    tags=['etl', 'v2'],
     schedule_interval=timedelta(days=1)
 ):
     # downloadFileOperator(task_id="ok")
-    stage1 = downloadFileOperator(task_id="downloadFile")
-    stage2 = stagingOperator(task_id="staging")
+    stage1 = downloadFileOperator(task_id="DownloadFile")
+    stage2 = stagingOperator(task_id="Staging")
     stage3 = EtlOperator(task_id="Etl")
     
     stage1 >> stage2 >> stage3

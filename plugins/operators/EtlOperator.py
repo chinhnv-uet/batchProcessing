@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession
 import clickhouse_connect
 from pyspark.sql import functions as F
 import pandas as pd
+from pyspark.sql.functions import col
 
 class EtlOperator(BaseOperator):
 
@@ -62,11 +63,11 @@ class EtlOperator(BaseOperator):
         #dim time
         times = pd.date_range(start='00:00:00', end='23:59:59', freq='s').time
 
-        timeDf = pd.DataFrame({'Time_Key': [int(time.strftime('%H%M%S')) for time in times],  # Chuyển đổi thành dạng int (hhmmss)
-                        'FullTime': [time.strftime('%H:%M:%S') for time in times],  # Chuyển đổi thành dạng hh:mm:ss
-                        'Hour': [time.hour for time in times],  # Lấy giờ
-                        'Minute': [time.minute for time in times],  # Lấy phút
-                        'Second': [time.second for time in times]})  # Lấy giây
+        timeDf = pd.DataFrame({'Time_Key': [int(time.strftime('%H%M%S')) for time in times],
+                        'FullTime': [time.strftime('%H:%M:%S') for time in times],
+                        'Hour': [time.hour for time in times],
+                        'Minute': [time.minute for time in times],
+                        'Second': [time.second for time in times]})
         spark_TimeDf = spark.createDataFrame(timeDf)
         spark_TimeDf.write.mode("append").format("jdbc").options(**{'url': uri, 'dbtable' : 'Dim_Time', 'isolationLevel' : 'NONE'}).save()
         self.log.info("Insert dim time successfully")
