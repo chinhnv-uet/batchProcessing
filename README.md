@@ -18,7 +18,7 @@
 
 
 ## 1. Introduction 
-Data is collected from Singapore Exchange website about their transaction daily, and the company's analytic teams are interested in understanding their business transactions.  
+Data is collected from Singapore Exchange [website](https://www.sgx.com/research-education/derivatives) about their transaction daily, and the company's analytic teams are interested in understanding their business transactions.  
 We will build ETL pipelines that will transform raw data into processed data, and store them in Clickhouse dbms for ad hoc analytics.
 
 Data downloaded from website included bid, ask, and traded transactions recorded in a day. A file has about 4 million records and is uploaded to the website daily. 
