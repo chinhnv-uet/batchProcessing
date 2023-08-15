@@ -9,7 +9,7 @@ from operators.EtlOperator import EtlOperator
 
     
 with DAG(
-    dag_id="TradingData",
+    dag_id="EtlTradingData",
     start_date=datetime(2023, 8, 13, 11, 0, 0),
     catchup=False,
     tags=['etl', 'v2'],
